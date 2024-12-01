@@ -1,6 +1,5 @@
 import { notFound, redirect } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
-import { readFile } from "fs/promises";
 import { CodeBlock } from "@/ui/codeblock";
 import type { SVGProps } from "react";
 import { revalidateTag, unstable_cache } from "next/cache";
@@ -23,7 +22,13 @@ export default async function DayPage(context: {
 
   let mdxSource;
   try {
-    mdxSource = await readFile(`./src/content/2024/day${day}.mdx`);
+    const res = await fetch(
+      `https://raw.githubusercontent.com/alfonsusac/advent-of-ui/refs/heads/main/src/content/2024/day${day}.mdx`
+    );
+    if (!res.ok) {
+      return notFound();
+    }
+    mdxSource = await res.text();
   } catch {
     notFound();
   }
