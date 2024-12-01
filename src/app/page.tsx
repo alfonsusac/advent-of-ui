@@ -20,7 +20,9 @@ export default function Home() {
 
       <div className="flex flex-wrap gap-2 relative">
         {[...Array(24).keys()].map(day => {
-          const date = new Date(Date.UTC(new Date().getFullYear(), 11, day+1, 5, 0)); // December = month 11 (zero-indexed)
+          const date = new Date(
+            Date.UTC(new Date().getFullYear(), 11, day + 1, 5, 0)
+          ); // December = month 11 (zero-indexed)
           const hidden = new Date(Date.now()) < date;
           // const nextDay = new Date(Date.now()).getDate() === day + 1;
           // const hidden = false
@@ -54,9 +56,7 @@ export default function Home() {
                 Day
               </div>
               <div className={`font-bold text-5xl`}>{day + 1}</div>
-              {day + 1 === new Date(Date.now()).getDate() && (
-                <DaysTimer days={day + 1} />
-              )}
+              <DaysTimer days={day + 1} />
             </a>
           );
         })}

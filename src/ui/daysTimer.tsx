@@ -15,6 +15,8 @@ export function DaysTimer(props: {
     expiryTimestamp: expiryDate,
   });
 
+  if (days > 1) return null
+
   return (
     <div className="font-mono absolute bottom-2">
       {days}:{hours}:{minutes}:{seconds}
