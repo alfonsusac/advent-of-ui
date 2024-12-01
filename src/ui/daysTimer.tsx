@@ -11,11 +11,14 @@ export function DaysTimer(props: {
     Date.UTC(new Date().getFullYear(), 11, props.days , 5, 0)
   );
 
-  const { days, hours, minutes, seconds } = useTimer({
+  const { days, hours, minutes, seconds, isRunning } = useTimer({
     expiryTimestamp: expiryDate,
   });
 
-  if (days > 1) return null
+  if (days >= 1) return null
+  if (seconds === 0 && minutes === 0 && hours === 0 && days === 0) {
+    return null
+  }
 
   return (
     <div className="font-mono absolute bottom-2">
