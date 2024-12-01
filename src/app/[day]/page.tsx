@@ -3,27 +3,88 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import { readFile, readdir } from "fs/promises";
 import { CodeBlock } from "@/ui/codeblock";
 import type { SVGProps } from "react";
+import { notion } from "@/lib/notion";
+import { unstable_cache } from "next/cache";
+import { isFullBlock, isFullPage } from "@notionhq/client";
 
-export default async function DayPage(
-  context: Promise<{
-    params: {
-      day: string;
-    };
-  }>
-) {
-  const { params } = await context;
+export default async function DayPage(context: {
+  params: Promise<{
+    day: string;
+  }>;
+}) {
+  const params = await context.params;
   const day = parseInt(params.day);
   if (typeof day !== "number" || Number.isNaN(day)) {
     return notFound();
   }
 
-  let mdxSource
+  let mdxSource;
   try {
     mdxSource = await readFile(`./src/content/2024/day${day}.mdx`);
   } catch (error) {
-    notFound()
+    notFound();
   }
 
+  let data = await unstable_cache(
+    async () => {
+      const data = await notion.databases.query({
+        database_id: "14f5ab0c8dae80798679f34056328183",
+        filter: {
+          and: [
+            {
+              property: "Year",
+              select: {
+                equals: "2024",
+              },
+            },
+            {
+              property: "Day",
+              select: {
+                equals: day + "",
+              },
+            },
+          ],
+        },
+      });
+      const results = data.results;
+      console.log(results);
+      const processed = data.results.map(entry => {
+        if (!isFullPage(entry)) {
+          throw new Error("Not a full block");
+        }
+        let link;
+        if (entry.properties.Link.type === "title") {
+          link = entry.properties.Link.title[0].plain_text;
+        } else {
+        }
+
+        let author;
+        if (entry.properties.Author.type === "rich_text") {
+          author = entry.properties.Author.rich_text[0].plain_text;
+        } else {
+        }
+
+        let likes;
+        if (entry.properties.Likes.type === "number") {
+          likes = entry.properties.Likes.number;
+        } else {
+        }
+
+        return {
+          id: entry.id,
+          link,
+          author,
+          likes,
+          createdDate: entry.created_time,
+        };
+      });
+      return processed;
+    },
+    [],
+    {
+      revalidate: 5,
+    }
+  )();
 
   return (
     <>
@@ -76,23 +137,23 @@ export default async function DayPage(
           <div className="p-2 cursor-pointer hover:bg-black/5 rounded-md text-sm text-black/60 font-medium mt-2 flex items-center gap-2">
             <MdiPlus /> Add submission
           </div>
-          {[...Array(5).keys()].map(post => {
+          {data.map(post => {
             return (
-              <div key={post} className="my-4 flex gap-4 items-center text-sm">
+              <div key={post.id} className="my-4 flex gap-4 items-center text-sm">
                 {/* Upvotes */}
                 <div className="flex flex-row items-center gap-2 lg:w-1/6 md:w-1/12 w-2/12 flex-shrink-0">
                   <div className="text-2xl font-semibold">
                     <MdiCandyOutline className="w-4 h-4" />
                   </div>
-                  <div className="text-center">0</div>
+                  <div className="text-center">{post.likes}</div>
                 </div>
-                <div className="font-semibold text tracking-tight lg:w-2/6 md:w-1/5 w-2/5 flex-shrink-0">
-                  User {post}
+                <div className="font-semibold text tracking-tight">
+                  {post.author}
                 </div>
                 <div className="w-full flex-shrink-0">
                   {/* Codepen link */}
-                  <a href="#" className="text-blue-600 hover:underline text-ellipsis">
-                    View submission
+                  <a href={post.link} className="text-blue-600 hover:underline">
+                    {post.link}
                   </a>
                 </div>
               </div>
@@ -104,9 +165,6 @@ export default async function DayPage(
     </>
   );
 }
-
-
-
 
 export function MdiCandy(props: SVGProps<SVGSVGElement>) {
   return (
@@ -125,7 +183,6 @@ export function MdiCandy(props: SVGProps<SVGSVGElement>) {
   );
 }
 
-
 export function MdiCandyOutline(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
@@ -142,7 +199,6 @@ export function MdiCandyOutline(props: SVGProps<SVGSVGElement>) {
     </svg>
   );
 }
-
 
 function MdiPlus(props: SVGProps<SVGSVGElement>) {
   return (
