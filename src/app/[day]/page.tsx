@@ -5,6 +5,7 @@ import type { SVGProps } from "react";
 import { revalidateTag, unstable_cache } from "next/cache";
 import { auth, getUsername, signIn, signOut } from "@/lib/auth";
 import prisma from "@/lib/db";
+import { Footer } from "@/ui/footer";
 
 export default async function DayPage(context: {
   params: Promise<{
@@ -22,20 +23,21 @@ export default async function DayPage(context: {
 
   let mdxSource;
   try {
-    const res = await unstable_cache(
-      async () =>
-        await fetch(
+    mdxSource = await unstable_cache(
+      async () => {
+        const res = await fetch(
           `https://raw.githubusercontent.com/alfonsusac/advent-of-ui/refs/heads/main/src/content/2024/day${day}.mdx`
-        ),
+        );
+        if (!res.ok) {
+          return notFound();
+        }
+        return res.text();
+      },
       ["day" + day],
       {
         revalidate: 30,
       }
     )();
-    if (!res.ok) {
-      return notFound();
-    }
-    mdxSource = await res.text();
   } catch {
     notFound();
   }
@@ -372,7 +374,7 @@ export default async function DayPage(context: {
           })}
         </div>
       </div>
-      <div className="p-8">Made by @alfonsusac</div>
+      <Footer />
     </>
   );
 }

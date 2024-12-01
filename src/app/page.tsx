@@ -1,5 +1,7 @@
 // https://v0.dev/chat/k3J02qcHbJb
 
+import { Footer } from "@/ui/footer";
+
 export default function Home() {
   return (
     <div className="mx-8">
@@ -69,15 +71,7 @@ export default function Home() {
         })}
       </div>
 
-      <div className="p-8 tracking-tight">
-        Made by{" "}
-        <a
-          href="https://x.com/alfonsusac"
-          className="underline underline-offset-4 "
-        >
-          @alfonsusac
-        </a>
-      </div>
+      <Footer />
     </div>
   );
 }
