@@ -1,6 +1,8 @@
 // https://v0.dev/chat/k3J02qcHbJb
 
 import { Footer } from "@/ui/footer";
+import { AdventTimer } from "@/ui/adventTiner";
+import { DaysTimer } from "@/ui/daysTimer";
 
 export default function Home() {
   return (
@@ -11,24 +13,7 @@ export default function Home() {
           <p className="">A UI challenge for the holiday season</p>
         </div>
         <div className="flex flex-col">
-          <div className="flex flex-row gap-2 items-end tracking-tight">
-            <div className="text-3xl font-bold">23</div>
-            <div className="-translate-x-2 -translate-y-0.5 font-black text-gray-600 opacity-40">
-              D
-            </div>
-            <div className="text-3xl font-bold">23</div>
-            <div className="-translate-x-2 -translate-y-0.5 font-black text-gray-600 opacity-40">
-              H
-            </div>
-            <div className="text-3xl font-bold">59</div>
-            <div className="-translate-x-2 -translate-y-0.5 font-black text-gray-600 opacity-40">
-              M
-            </div>
-            <div className="text-3xl font-bold">59</div>
-            <div className="-translate-x-2 -translate-y-0.5 font-black text-gray-600 opacity-40">
-              S
-            </div>
-          </div>
+          <AdventTimer />
         </div>
       </div>
 
@@ -66,6 +51,7 @@ export default function Home() {
                 Day
               </div>
               <div className={`font-bold text-5xl`}>{day + 1}</div>
+              <DaysTimer days={day + 1} />
             </a>
           );
         })}
