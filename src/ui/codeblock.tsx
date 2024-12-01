@@ -1,4 +1,4 @@
-import type { ComponentProps, DetailedHTMLProps, HTMLAttributes } from "react";
+import type { DetailedHTMLProps, HTMLAttributes } from "react";
 import { codeToHtml } from "shiki";
 
 export async function CodeBlock(
@@ -6,7 +6,8 @@ export async function CodeBlock(
 ) {
   const { children, ...rest } = props;
 
-  const out = await codeToHtml((children as any).props.children, {
+  // @ts-expect-error children is a string
+  const out = await codeToHtml((children).props.children, {
     lang: "ts",
     theme: "github-light",
   });

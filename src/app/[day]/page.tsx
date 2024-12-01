@@ -24,7 +24,7 @@ export default async function DayPage(context: {
   let mdxSource;
   try {
     mdxSource = await readFile(`./src/content/2024/day${day}.mdx`);
-  } catch (error) {
+  } catch {
     notFound();
   }
 
@@ -182,7 +182,7 @@ export default async function DayPage(context: {
                   let url: URL;
                   try {
                     url = new URL(link);
-                  } catch (error) {
+                  } catch {
                     return redirect(`/${day}?error=invalid-link`);
                   }
                   if (
@@ -366,7 +366,7 @@ export default async function DayPage(context: {
   );
 }
 
-export function MdiCandy(props: SVGProps<SVGSVGElement>) {
+function MdiCandy(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -383,7 +383,7 @@ export function MdiCandy(props: SVGProps<SVGSVGElement>) {
   );
 }
 
-export function MdiCandyOutline(props: SVGProps<SVGSVGElement>) {
+function MdiCandyOutline(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -396,20 +396,6 @@ export function MdiCandyOutline(props: SVGProps<SVGSVGElement>) {
         fill="currentColor"
         d="M9.88 9.88c1.17-1.17 3.07-1.17 4.24 0s1.17 3.07 0 4.24a3 3 0 0 1-4.24 0a3 3 0 0 1 0-4.24M8.46 8.46c-1.96 1.96-1.96 5.12 0 7.08s5.12 1.96 7.08 0s1.96-5.12 0-7.08s-5.12-1.96-7.08 0m11.01-3.91s-.97.12-2.04.82c-.15-1.05-.65-2.1-1.5-2.95c-1.25 1.25-1.4 2.8-1.1 3.92c1.39.36 2.47 1.44 2.83 2.83c1.12.3 2.68.15 3.92-1.1a5.25 5.25 0 0 0-2.9-1.49c.39-.58.7-1.25.79-2.03M4.53 19.45s.97-.12 2.04-.81c.15 1.04.65 2.09 1.5 2.94c1.25-1.24 1.4-2.8 1.1-3.92a3.96 3.96 0 0 1-2.83-2.83c-1.12-.3-2.67-.15-3.92 1.1c.84.84 1.87 1.34 2.9 1.49c-.39.58-.7 1.26-.79 2.03"
       ></path>
-    </svg>
-  );
-}
-
-function MdiPlus(props: SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="1em"
-      height="1em"
-      viewBox="0 0 24 24"
-      {...props}
-    >
-      <path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"></path>
     </svg>
   );
 }

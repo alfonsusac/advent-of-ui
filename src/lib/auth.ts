@@ -4,15 +4,15 @@ import GitHub from "next-auth/providers/github";
 export const { auth, handlers, signIn, signOut } = NextAuth({
   providers: [GitHub],
   callbacks: {
-    async jwt({ token, user, account, profile, isNewUser }) {
+    async jwt({ token,profile }) {
       if (profile) {
         token.username = profile.login;
       }
       return token;
     },
-    async session({ session, token, user }) {
+    async session({ session, token }) {
       if ("username" in token) {
-        // @ts-ignore
+        // @ts-expect-error username is set
         session.user.username = token.username;
       }
       return session;
@@ -21,7 +21,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 })
 
 export function getUsername(session: Session) {
-  // @ts-ignore
+  // @ts-expect-error username is set
   const username: string = session.user.username;
   if (!username) {
     throw new Error("No username found in session");
