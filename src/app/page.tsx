@@ -11,13 +11,21 @@ export default function Home() {
         <div className="flex flex-col">
           <div className="flex flex-row gap-2 items-end tracking-tight">
             <div className="text-3xl font-bold">23</div>
-            <div className="-translate-x-2 -translate-y-0.5 font-black text-gray-600 opacity-40">D</div>
+            <div className="-translate-x-2 -translate-y-0.5 font-black text-gray-600 opacity-40">
+              D
+            </div>
             <div className="text-3xl font-bold">23</div>
-            <div className="-translate-x-2 -translate-y-0.5 font-black text-gray-600 opacity-40">H</div>
+            <div className="-translate-x-2 -translate-y-0.5 font-black text-gray-600 opacity-40">
+              H
+            </div>
             <div className="text-3xl font-bold">59</div>
-            <div className="-translate-x-2 -translate-y-0.5 font-black text-gray-600 opacity-40">M</div>
+            <div className="-translate-x-2 -translate-y-0.5 font-black text-gray-600 opacity-40">
+              M
+            </div>
             <div className="text-3xl font-bold">59</div>
-            <div className="-translate-x-2 -translate-y-0.5 font-black text-gray-600 opacity-40">S</div>
+            <div className="-translate-x-2 -translate-y-0.5 font-black text-gray-600 opacity-40">
+              S
+            </div>
           </div>
         </div>
       </div>
@@ -61,7 +69,15 @@ export default function Home() {
         })}
       </div>
 
-      <div className="p-8 tracking-tight">Made by @alfonsusac</div>
+      <div className="p-8 tracking-tight">
+        Made by{" "}
+        <a
+          href="https://x.com/alfonsusac"
+          className="underline underline-offset-4 "
+        >
+          @alfonsusac
+        </a>
+      </div>
     </div>
   );
 }

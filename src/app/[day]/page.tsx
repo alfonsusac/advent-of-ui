@@ -22,9 +22,16 @@ export default async function DayPage(context: {
 
   let mdxSource;
   try {
-    const res = await fetch(
-      `https://raw.githubusercontent.com/alfonsusac/advent-of-ui/refs/heads/main/src/content/2024/day${day}.mdx`
-    );
+    const res = await unstable_cache(
+      async () =>
+        await fetch(
+          `https://raw.githubusercontent.com/alfonsusac/advent-of-ui/refs/heads/main/src/content/2024/day${day}.mdx`
+        ),
+      ["day" + day],
+      {
+        revalidate: 30,
+      }
+    )();
     if (!res.ok) {
       return notFound();
     }
@@ -89,7 +96,6 @@ export default async function DayPage(context: {
           },
         },
       });
-      // console.log(data);
       return data;
     },
     [day + ""],
