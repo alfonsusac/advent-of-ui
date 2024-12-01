@@ -8,6 +8,7 @@ import prisma from "@/lib/db";
 import { Footer } from "@/ui/footer";
 import { Input } from "@/ui/input";
 import { SubmitButton } from "@/ui/submitButton";
+import { FormSpinner } from "@/ui/formSpinner";
 
 export default async function DayPage(context: {
   params: Promise<{
@@ -266,12 +267,15 @@ export default async function DayPage(context: {
                   autoComplete="off"
                   className="w-full p-2 mt-2 rounded-md outline outline-black/5 font-mono tracking-tight text-sm"
                 />
-                <SubmitButton
-                  type="submit"
-                  className="p-2 mt-4 text-sm px-4 bg-white rounded-md outline-black/10 outline  hover:bg-black/5"
-                >
-                  Submit
-                </SubmitButton>
+                <div className="flex items-center gap-4">
+                  <SubmitButton
+                    type="submit"
+                    className="p-2 mt-4 text-sm px-4 bg-white rounded-md outline-black/10 outline  hover:bg-black/5"
+                  >
+                    Submit
+                  </SubmitButton>
+                  <FormSpinner className="flex" />
+                </div>
               </form>
             </div>
           )}
