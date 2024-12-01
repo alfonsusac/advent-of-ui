@@ -27,7 +27,7 @@ export default async function DayPage(
 
   return (
     <>
-      <div className="flex flex-col lg:flex-row">
+      <div className="flex flex-col lg:flex-row w-full">
         <div className="mx-8 max-w-2xl pb-12">
           <div className="flex gap-2 justify-between p-4">
             <a href={"/"} className="font-semibold tracking-tighter">
@@ -80,18 +80,18 @@ export default async function DayPage(
             return (
               <div key={post} className="my-4 flex gap-4 items-center text-sm">
                 {/* Upvotes */}
-                <div className="flex flex-row items-center gap-2">
+                <div className="flex flex-row items-center gap-2 lg:w-1/6 md:w-1/12 w-2/12 flex-shrink-0">
                   <div className="text-2xl font-semibold">
                     <MdiCandyOutline className="w-4 h-4" />
                   </div>
                   <div className="text-center">0</div>
                 </div>
-                <div className="font-semibold text tracking-tight">
+                <div className="font-semibold text tracking-tight lg:w-2/6 md:w-1/5 w-2/5 flex-shrink-0">
                   User {post}
                 </div>
-                <div className="">
+                <div className="w-full flex-shrink-0">
                   {/* Codepen link */}
-                  <a href="#" className="text-blue-600 hover:underline">
+                  <a href="#" className="text-blue-600 hover:underline text-ellipsis">
                     View submission
                   </a>
                 </div>
