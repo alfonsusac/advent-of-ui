@@ -1,14 +1,15 @@
 "use client"
 
+import { useEffect, useState } from "react";
 import { useTimer } from "react-timer-hook";
 
 export function DaysTimer(props: {
   days: number;
 }) {
-  const tomorrowsDate = new Date().getDate() + 1;
-  if (props.days !== tomorrowsDate) {
-    return null;
-  }
+  // const [mounted, setMounted] = useState(false);
+  // useEffect(() => {
+  //   setMounted(true);
+  // });
 
   // Only show if expiry is GMT+7 at 12PM
   const expiryDate = new Date();
@@ -19,10 +20,11 @@ export function DaysTimer(props: {
     expiryTimestamp: expiryDate,
   });
 
-  // render DD:hh:mm:ss
+  // if (!mounted) return null;
+
 
   return (
-    <div className="font-mono">
+    <div className="font-mono absolute bottom-2">
       {days}:{hours}:{minutes}:{seconds}
     </div>
   );

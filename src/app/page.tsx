@@ -3,6 +3,7 @@
 import { Footer } from "@/ui/footer";
 import { AdventTimer } from "@/ui/adventTiner";
 import { DaysTimer } from "@/ui/daysTimer";
+import { Mount } from "@/ui/mounted";
 
 export default function Home() {
   return (
@@ -17,7 +18,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-2 relative">
         {[...Array(24).keys()].map(day => {
           const hidden = new Date(Date.now()).getDate() < day + 1;
           // const nextDay = new Date(Date.now()).getDate() === day + 1;
@@ -42,6 +43,7 @@ export default function Home() {
                 p-2 w-40 h-40
                 hover:bg-black hover:text-white transition-all
                 cursor-pointer
+                block
                 relative
                 `}
             >
@@ -51,7 +53,9 @@ export default function Home() {
                 Day
               </div>
               <div className={`font-bold text-5xl`}>{day + 1}</div>
-              <DaysTimer days={day + 1} />
+              {day + 1 === new Date().getDate() + 1 && (
+                <DaysTimer days={day + 1} />
+              )}
             </a>
           );
         })}
