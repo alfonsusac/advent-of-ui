@@ -6,6 +6,8 @@ import { revalidateTag, unstable_cache } from "next/cache";
 import { auth, getUsername, signIn, signOut } from "@/lib/auth";
 import prisma from "@/lib/db";
 import { Footer } from "@/ui/footer";
+import { Input } from "@/ui/input";
+import { SubmitButton } from "@/ui/submitButton";
 
 export default async function DayPage(context: {
   params: Promise<{
@@ -50,6 +52,7 @@ export default async function DayPage(context: {
         where: {
           day,
           year: 2024,
+          deleted: false,
         },
         include: {
           _count: {
@@ -255,7 +258,7 @@ export default async function DayPage(context: {
                     </span>
                   )}
                 </label>
-                <input
+                <Input
                   type="text"
                   id="submisison_link"
                   name="submisison_link"
@@ -263,12 +266,12 @@ export default async function DayPage(context: {
                   autoComplete="off"
                   className="w-full p-2 mt-2 rounded-md outline outline-black/5 font-mono tracking-tight text-sm"
                 />
-                <button
+                <SubmitButton
                   type="submit"
                   className="p-2 mt-4 text-sm px-4 bg-white rounded-md outline-black/10 outline  hover:bg-black/5"
                 >
                   Submit
-                </button>
+                </SubmitButton>
               </form>
             </div>
           )}
@@ -286,13 +289,15 @@ export default async function DayPage(context: {
                 {/* Upvotes */}
                 <div className="flex flex-row items-center gap-2 lg:w-1/6 md:w-1/12 w-2/12">
                   {liked ? (
-                    <button
+                    <SubmitButton
                       type="button"
                       onClick={async () => {
                         "use server";
+                        const session = await auth();
+                        if (!session) redirect(`/${day}`);
                         await prisma.user.update({
                           where: {
-                            username: post.user.username,
+                            username: getUsername(session),
                           },
                           data: {
                             likes: {
@@ -308,15 +313,17 @@ export default async function DayPage(context: {
                       className="w-8 h-8 rounded-md hover:bg-zinc-50 flex items-center justify-center shrink-0"
                     >
                       <MdiCandy className="w-4 h-4" />
-                    </button>
+                    </SubmitButton>
                   ) : (
-                    <button
+                    <SubmitButton
                       type="button"
                       onClick={async () => {
                         "use server";
+                        const session = await auth();
+                        if (!session) redirect(`/${day}`);
                         await prisma.user.update({
                           where: {
-                            username: post.user.username,
+                            username: getUsername(session),
                           },
                           data: {
                             likes: {
@@ -332,7 +339,7 @@ export default async function DayPage(context: {
                       className="w-8 h-8 rounded-md hover:bg-zinc-50 flex items-center justify-center shrink-0"
                     >
                       <MdiCandyOutline className="w-4 h-4" />
-                    </button>
+                    </SubmitButton>
                   )}
 
                   <div className="text-center">{post._count.likes}</div>
@@ -353,9 +360,17 @@ export default async function DayPage(context: {
                       type="button"
                       onClick={async () => {
                         "use server";
-                        await prisma.submission.delete({
+                        const session = await auth();
+                        if (!session) redirect(`/${day}`);
+                        await prisma.submission.update({
                           where: {
                             id: post.id,
+                          },
+                          data: {
+                            likes: {
+                              set: [],
+                            },
+                            deleted: true,
                           },
                         });
                         revalidateTag(`submission-2024-${day}`);

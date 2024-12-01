@@ -23,13 +23,14 @@ model User {
 }
 
 model Submission {
-  id        String   @id @default(cuid())
+  id        String    @id @default(cuid())
   url       String
-  user      User     @relation(fields: [userId], references: [id], name: "UserSubmissions")
+  user      User      @relation(fields: [userId], references: [id], name: "UserSubmissions")
   userId    String
-  likes     User[]   @relation("UserLikes")
+  likes     User[]    @relation("UserLikes")
   year      Int
-  day       Int 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  day       Int
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   Boolean   @default(false)
 }
