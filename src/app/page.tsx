@@ -8,7 +8,18 @@ export default function Home() {
           <h1 className="text-6xl font-bold tracking-tighter">Advent of UI</h1>
           <p className="">A UI challenge for the holiday season</p>
         </div>
-        <div>23D:24H:59M:59S</div>
+        <div className="flex flex-col">
+          <div className="flex flex-row gap-2 items-end tracking-tight">
+            <div className="text-3xl font-bold">23</div>
+            <div className="-translate-x-2 -translate-y-0.5 font-black text-gray-600 opacity-40">D</div>
+            <div className="text-3xl font-bold">23</div>
+            <div className="-translate-x-2 -translate-y-0.5 font-black text-gray-600 opacity-40">H</div>
+            <div className="text-3xl font-bold">59</div>
+            <div className="-translate-x-2 -translate-y-0.5 font-black text-gray-600 opacity-40">M</div>
+            <div className="text-3xl font-bold">59</div>
+            <div className="-translate-x-2 -translate-y-0.5 font-black text-gray-600 opacity-40">S</div>
+          </div>
+        </div>
       </div>
 
       <div className="flex flex-wrap gap-2">
