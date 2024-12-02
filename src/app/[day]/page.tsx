@@ -1,7 +1,7 @@
 import { notFound, redirect } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { CodeBlock } from "@/ui/codeblock";
-import type { SVGProps } from "react";
+import { type SVGProps } from "react";
 import { revalidateTag, unstable_cache } from "next/cache";
 import { auth, getUsername, signIn, signOut } from "@/lib/auth";
 import prisma from "@/lib/db";
@@ -9,6 +9,7 @@ import { Footer } from "@/ui/footer";
 import { Input } from "@/ui/input";
 import { SubmitButton } from "@/ui/submitButton";
 import { FormSpinner } from "@/ui/formSpinner";
+import { SubmissionListItem } from "./SubmissionListItem";
 
 export default async function DayPage(context: {
   params: Promise<{
@@ -29,7 +30,7 @@ export default async function DayPage(context: {
     mdxSource = await unstable_cache(
       async () => {
         const res = await fetch(
-          `https://raw.githubusercontent.com/alfonsusac/advent-of-ui/refs/heads/main/src/content/2024/day${day}.mdx`
+          `https://raw.githubusercontent.com/alfonsusac/advent-of-ui/refs/heads/main/src/content/2024/day${ day }.mdx`
         );
         if (!res.ok) {
           return notFound();
@@ -83,7 +84,7 @@ export default async function DayPage(context: {
     },
     [day + ""],
     {
-      tags: [`submission-2024-${day}`],
+      tags: [`submission-2024-${ day }`],
       revalidate: 5,
     }
   )();
@@ -106,7 +107,7 @@ export default async function DayPage(context: {
     },
     [day + ""],
     {
-      tags: [`submission-2024-${day}`],
+      tags: [`submission-2024-${ day }`],
       revalidate: 5,
     }
   )();
@@ -117,7 +118,6 @@ export default async function DayPage(context: {
   return (
     <>
       <div className="flex flex-col lg:flex-row w-full">
-
         <div className="mx-8 max-w-2xl pb-12 min-w-[32rem]">
           <div className="flex gap-2 justify-between p-4">
             <a href={"/"} className="font-semibold tracking-tighter">
@@ -190,10 +190,7 @@ export default async function DayPage(context: {
               <form
                 action={async form => {
                   "use server";
-                  // console.log("HELLOOOO??");
-                  // console.log("Form", form);
                   const link = form.get("submisison_link");
-                  // console.log("Link", link);
                   if (!link) return;
                   if (typeof link !== "string") return;
                   if (!session) return;
@@ -201,13 +198,13 @@ export default async function DayPage(context: {
                   try {
                     url = new URL(link);
                   } catch {
-                    return redirect(`/${day}?error=invalid-link`);
+                    return redirect(`/${ day }?error=invalid-link`);
                   }
                   if (
                     url.hostname !== "codepen.io" &&
                     url.hostname !== "play.tailwindcss.com"
                   ) {
-                    redirect(`/${day}?error=invalid-host`);
+                    redirect(`/${ day }?error=invalid-host`);
                   }
 
                   // console.log("Success!!");
@@ -228,7 +225,7 @@ export default async function DayPage(context: {
                       },
                     },
                   });
-                  revalidateTag(`submission-2024-${day}`);
+                  revalidateTag(`submission-2024-${ day }`);
                   // redirect(`/${day}`);
                 }}
               >
@@ -281,156 +278,86 @@ export default async function DayPage(context: {
             </div>
           )}
 
+
+
           {submissionData.map(post => {
             const liked = currentUserLikes.some(sub => sub.id === post.id);
             const isAuthor = session
               ? getUsername(session) === post.user.username
               : false;
             return (
-              <div
+              <SubmissionListItem
                 key={post.id}
-                className="my-4 flex gap-4 items-center text-sm"
-              >
-                {/* Upvotes */}
-                <div className="flex flex-row items-center gap-2 lg:w-1/6 md:w-1/12 w-2/12">
-                  {liked ? (
-                    <SubmitButton
-                      type="button"
-                      onClick={async () => {
-                        "use server";
-                        const session = await auth();
-                        if (!session) redirect(`/${day}`);
-                        await prisma.user.update({
-                          where: {
-                            username: getUsername(session),
-                          },
-                          data: {
-                            likes: {
-                              disconnect: {
-                                id: post.id,
-                              },
-                            },
-                          },
-                        });
-                        revalidateTag(`submission-2024-${day}`);
-                        redirect(`/${day}`);
-                      }}
-                      className="w-8 h-8 rounded-md hover:bg-zinc-50 flex items-center justify-center shrink-0"
-                    >
-                      <MdiCandy className="w-4 h-4" />
-                    </SubmitButton>
-                  ) : (
-                    <SubmitButton
-                      type="button"
-                      onClick={async () => {
-                        "use server";
-                        const session = await auth();
-                        if (!session) redirect(`/${day}`);
-                        await prisma.user.update({
-                          where: {
-                            username: getUsername(session),
-                          },
-                          data: {
-                            likes: {
-                              connect: {
-                                id: post.id,
-                              },
-                            },
-                          },
-                        });
-                        revalidateTag(`submission-2024-${day}`);
-                        redirect(`/${day}`);
-                      }}
-                      className="w-8 h-8 rounded-md hover:bg-zinc-50 flex items-center justify-center shrink-0"
-                    >
-                      <MdiCandyOutline className="w-4 h-4" />
-                    </SubmitButton>
-                  )}
-
-                  <div className="text-center">{post._count.likes}</div>
-                </div>
-                <div className="font-semibold text tracking-tight">
-                  {post.user.username}
-                </div>
-                <div className="min-w-0 truncate overflow-hidden text-blue-600 hover:underline">
-                  {/* Codepen link */}
-                  <a href={post.url} className="" target="_blank">
-                    {post.url}
-                  </a>
-                </div>
-                {
-                  // Delete Button
-                  isAuthor ? (
-                    <button
-                      type="button"
-                      onClick={async () => {
-                        "use server";
-                        const session = await auth();
-                        if (!session) redirect(`/${day}`);
-                        await prisma.submission.update({
-                          where: {
+                user={{ liked, isAuthor }}
+                post={{
+                  id: post.id,
+                  url: post.url,
+                  username: post.user.username,
+                  likeCount: post._count.likes,
+                }}
+                onLike={
+                  async () => {
+                    "use server";
+                    if (!session) redirect(`/${ day }`);
+                    await prisma.user.update({
+                      where: {
+                        username: getUsername(session),
+                      },
+                      data: {
+                        likes: {
+                          connect: {
                             id: post.id,
                           },
-                          data: {
-                            likes: {
-                              set: [],
-                            },
-                            deleted: true,
+                        },
+                      },
+                    });
+                    // revalidateTag(`submission-2024-${ day }`);
+                    // redirect(`/${ day }`);
+                  }}
+                onUnlike={
+                  async () => {
+                    "use server";
+                    if (!session) redirect(`/${ day }`);
+                    await prisma.user.update({
+                      where: {
+                        username: getUsername(session),
+                      },
+                      data: {
+                        likes: {
+                          disconnect: {
+                            id: post.id,
                           },
-                        });
-                        revalidateTag(`submission-2024-${day}`);
-                        redirect(`/${day}`);
-                      }}
-                      className="w-8 h-8 rounded-md hover:bg-red-50 flex items-center justify-center"
-                    >
-                      <MaterialSymbolsDeleteOutline className="shrink-0 w-4 h-4 text-red-500" />
-                    </button>
-                  ) : (
-                    <></>
-                  )
-                }
-              </div>
+                        },
+                      },
+                    });
+                    // revalidateTag(`submission-2024-${ day }`);
+                    // redirect(`/${ day }`);
+                  }}
+                onDelete={
+                  async () => {
+                    "use server";
+                    if (!session) redirect(`/${ day }`);
+                    await prisma.submission.update({
+                      where: {
+                        id: post.id,
+                      },
+                      data: {
+                        likes: {
+                          set: [],
+                        },
+                        deleted: true,
+                      },
+                    });
+                    revalidateTag(`submission-2024-${ day }`);
+                    // redirect(`/${ day }`);
+                  }}
+              />
             );
           })}
         </div>
-
       </div>
       <Footer />
     </>
-  );
-}
-
-function MdiCandy(props: SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="1em"
-      height="1em"
-      viewBox="0 0 24 24"
-      {...props}
-    >
-      <path
-        fill="currentColor"
-        d="M15.54 8.46c1.96 1.96 1.96 5.12 0 7.08s-5.12 1.96-7.07 0s-1.97-5.12 0-7.08s5.11-1.96 7.07 0m3.93-3.91s-.97.12-2.04.81a5.24 5.24 0 0 0-1.5-2.94a4.03 4.03 0 0 0-1.1 3.92c1.39.36 2.47 1.44 2.83 2.83c1.12.3 2.68.15 3.92-1.1a5.25 5.25 0 0 0-2.9-1.49c.39-.58.7-1.25.79-2.03M4.53 19.45s.97-.12 2.04-.81c.15 1.04.65 2.09 1.5 2.94c1.25-1.24 1.4-2.8 1.1-3.92a3.94 3.94 0 0 1-2.83-2.83c-1.12-.3-2.68-.15-3.92 1.1c.84.84 1.87 1.34 2.9 1.49c-.39.58-.7 1.26-.79 2.03"
-      ></path>
-    </svg>
-  );
-}
-
-function MdiCandyOutline(props: SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="1em"
-      height="1em"
-      viewBox="0 0 24 24"
-      {...props}
-    >
-      <path
-        fill="currentColor"
-        d="M9.88 9.88c1.17-1.17 3.07-1.17 4.24 0s1.17 3.07 0 4.24a3 3 0 0 1-4.24 0a3 3 0 0 1 0-4.24M8.46 8.46c-1.96 1.96-1.96 5.12 0 7.08s5.12 1.96 7.08 0s1.96-5.12 0-7.08s-5.12-1.96-7.08 0m11.01-3.91s-.97.12-2.04.82c-.15-1.05-.65-2.1-1.5-2.95c-1.25 1.25-1.4 2.8-1.1 3.92c1.39.36 2.47 1.44 2.83 2.83c1.12.3 2.68.15 3.92-1.1a5.25 5.25 0 0 0-2.9-1.49c.39-.58.7-1.25.79-2.03M4.53 19.45s.97-.12 2.04-.81c.15 1.04.65 2.09 1.5 2.94c1.25-1.24 1.4-2.8 1.1-3.92a3.96 3.96 0 0 1-2.83-2.83c-1.12-.3-2.67-.15-3.92 1.1c.84.84 1.87 1.34 2.9 1.49c-.39.58-.7 1.26-.79 2.03"
-      ></path>
-    </svg>
   );
 }
 
@@ -446,23 +373,6 @@ function MdiGithub(props: SVGProps<SVGSVGElement>) {
       <path
         fill="currentColor"
         d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5c.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34c-.46-1.16-1.11-1.47-1.11-1.47c-.91-.62.07-.6.07-.6c1 .07 1.53 1.03 1.53 1.03c.87 1.52 2.34 1.07 2.91.83c.09-.65.35-1.09.63-1.34c-2.22-.25-4.55-1.11-4.55-4.92c0-1.11.38-2 1.03-2.71c-.1-.25-.45-1.29.1-2.64c0 0 .84-.27 2.75 1.02c.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02c.55 1.35.2 2.39.1 2.64c.65.71 1.03 1.6 1.03 2.71c0 3.82-2.34 4.66-4.57 4.91c.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2"
-      ></path>
-    </svg>
-  );
-}
-
-function MaterialSymbolsDeleteOutline(props: SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="1em"
-      height="1em"
-      viewBox="0 0 24 24"
-      {...props}
-    >
-      <path
-        fill="currentColor"
-        d="M7 21q-.825 0-1.412-.587T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.587 1.413T17 21zM17 6H7v13h10zM9 17h2V8H9zm4 0h2V8h-2zM7 6v13z"
       ></path>
     </svg>
   );

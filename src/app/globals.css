@@ -19,3 +19,9 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 } */
+
+
+/* https://github.com/whatwg/html/issues/7732#issuecomment-1883074086 */
+body:has(dialog[open]) {
+  overflow:hidden
+}
