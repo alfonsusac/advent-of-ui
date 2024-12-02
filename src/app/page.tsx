@@ -3,8 +3,13 @@
 import { Footer } from "@/ui/footer";
 import { AdventTimer } from "@/ui/adventTiner";
 import { DaysTimer } from "@/ui/daysTimer";
+import { auth } from "@/lib/auth";
 
-export default function Home() {
+export default async function Home() {
+
+  await auth();
+
+
   return (
     <div className="mx-8">
 
