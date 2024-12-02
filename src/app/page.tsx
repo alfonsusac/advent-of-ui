@@ -3,7 +3,6 @@
 import { Footer } from "@/ui/footer";
 import { AdventTimer } from "@/ui/adventTiner";
 import { DaysTimer } from "@/ui/daysTimer";
-import { Mount } from "@/ui/mounted";
 
 export default function Home() {
   return (

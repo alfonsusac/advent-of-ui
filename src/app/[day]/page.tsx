@@ -117,6 +117,7 @@ export default async function DayPage(context: {
   return (
     <>
       <div className="flex flex-col lg:flex-row w-full">
+
         <div className="mx-8 max-w-2xl pb-12 min-w-[32rem]">
           <div className="flex gap-2 justify-between p-4">
             <a href={"/"} className="font-semibold tracking-tighter">
@@ -160,7 +161,7 @@ export default async function DayPage(context: {
             />
           </div>
         </div>
-        <div className="min-h-screen mx-8 p-8 b border-t lg:border-t-0 lg:border-l max-w-2xl flex-col w-full min-w-0">
+        <div className="min-h-screen mx-8 p-8 b border-t lg:border-t-0 lg:border-l max-w-2xl flex-col grow min-w-0">
           <h4 className="font-semibold text-xl tracking-tight">Submissions</h4>
           {!session ? (
             <button
@@ -392,6 +393,7 @@ export default async function DayPage(context: {
             );
           })}
         </div>
+
       </div>
       <Footer />
     </>
