@@ -8,8 +8,9 @@ import { Mount } from "@/ui/mounted";
 export default function Home() {
   return (
     <div className="mx-8">
-      <div className="p-8 pt-24 flex flex-row gap-8 justify-between">
-        <div className="">
+
+      <div className="p-8 px-0 md:px-8 pt-24 flex flex-row gap-8 justify-between flex-wrap">
+        <div className="shrink-0">
           <h1 className="text-6xl font-bold tracking-tighter">Advent of UI</h1>
           <p className="">A UI challenge for the holiday season</p>
         </div>
