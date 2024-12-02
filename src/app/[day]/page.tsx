@@ -25,6 +25,12 @@ export default async function DayPage(context: {
   if (typeof day !== "number" || Number.isNaN(day)) {
     return notFound();
   }
+  if (day < 1 || day > 25) {
+    return notFound();
+  }
+  if (Date.now() > Date.UTC(2024, 11, day, 5, 0, 0)) {
+    return notFound();
+  }
 
   let mdxSource;
   try {
