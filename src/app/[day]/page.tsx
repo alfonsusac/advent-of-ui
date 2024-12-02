@@ -140,7 +140,7 @@ export default async function DayPage(context: {
   return (
     <>
       <div className="flex flex-col lg:flex-row w-full">
-        <div className="mx-8 max-w-2xl pb-12 min-w-[32rem]">
+        <div className="mx-8 max-w-2xl pb-12 flex-1 grow-[2] min-w-0">
           <div className="flex gap-2 justify-between p-4">
             <a href={"/"} className="font-semibold tracking-tighter">
               Advent Of UI
@@ -176,27 +176,29 @@ export default async function DayPage(context: {
                 pre: props => (
                   <CodeBlock
                     {...props}
-                    className="p-2 my-4 outline outline-black/5 rounded-md px-3 leading-6"
+                    className="p-2 my-4 outline outline-black/5 rounded-md px-3 leading-6 overflow-auto text-sm tracking-tight font-medium"
                   />
                 ),
               }}
             />
           </div>
         </div>
-        <div className="min-h-screen mx-8 p-8 b border-t lg:border-t-0 lg:border-l max-w-2xl flex-col grow min-w-0">
-          <h4 className="font-semibold text-xl tracking-tight">Submissions</h4>
+        <div className="min-h-screen mx-8 p-8 b border-t lg:border-t-0 lg:border-l max-w-2xl flex-col grow min-w-0 flex-1" id="submitAnchor">
+          <h4 className="font-semibold text-xl tracking-tight" id="submitAnchor" >Submit your Design</h4>
           {!session ? (
             <button
-              className="p-2 cursor-pointer hover:bg-black/5 rounded-md text-sm text-black/60 font-medium mt-2 flex items-center gap-2"
+              className="p-2 px-3 cursor-pointer hover:bg-black/5 rounded-md text-sm text-black/60 font-medium mt-2 flex items-center gap-2 border"
               onClick={async () => {
                 "use server";
-                await signIn("github");
+                await signIn("github", {
+                  redirectTo: `/${ day }#submitAnchor`,
+                });
               }}
             >
-              <MdiGithub className="w-4 h-4" /> Sign In to add Submission
+              <MdiGithub className="w-4 h-4" /> Sign In via GitHub
             </button>
           ) : (
-            <div className="mt-3 py-7 border-b border-t">
+            <div className="">
               <div className="flex items-center gap-2 text-sm">
                 <div>Logged in as {getUsername(session)}</div>
                 <button
@@ -253,95 +255,17 @@ export default async function DayPage(context: {
                   // redirect(`/${day}`);
                 }}
               />
-              {/* <form
-                action={async form => {
-                  "use server";
-                  const link = form.get("submisison_link");
-                  if (!link) return;
-                  if (typeof link !== "string") return;
-                  if (!session) return;
-                  let url: URL;
-                  try {
-                    url = new URL(link);
-                  } catch {
-                    return redirect(`/${ day }?error=invalid-link`);
-                  }
-                  if (
-                    url.hostname !== "codepen.io" &&
-                    url.hostname !== "play.tailwindcss.com"
-                  ) {
-                    redirect(`/${ day }?error=invalid-host`);
-                  }
-
-                  await prisma.submission.create({
-                    data: {
-                      url: link,
-                      day,
-                      year: 2024,
-                      user: {
-                        connectOrCreate: {
-                          where: {
-                            username: getUsername(session),
-                          },
-                          create: {
-                            username: getUsername(session),
-                          },
-                        },
-                      },
-                    },
-                  });
-                  revalidateTag(`submission-2024-${ day }`);
-                  // redirect(`/${day}`);
-                }}
-              >
-                <label
-                  className="block text-sm font-semibold mt-2"
-                  htmlFor="submisison_link"
-                >
-                  Link (
-                  <a
-                    href="https://codepen.io/pen"
-                    target="_blank"
-                    className="underline text-zinc-800 font-normal underline-offset-4"
-                  >
-                    codepen
-                  </a>
-                  /
-                  <a
-                    href="https://play.tailwindcss.com/"
-                    target="_blank"
-                    className="underline text-zinc-800 font-normal underline-offset-4"
-                  >
-                    tailwindplay
-                  </a>
-                  ){" "}
-                  {error && (
-                    <span className="text-red-500 font-normal">
-                      {error === "invalid-host" && "Invalid host"}
-                      {error === "invalid-link" && "Invalid link"}
-                    </span>
-                  )}
-                </label>
-                <Input
-                  type="text"
-                  id="submisison_link"
-                  name="submisison_link"
-                  required
-                  autoComplete="off"
-                  className="w-full p-2 mt-2 rounded-md outline outline-black/5 font-mono tracking-tight text-sm"
-                />
-                <div className="flex items-center gap-4">
-                  <SubmitButton
-                    type="submit"
-                    className="p-2 mt-4 text-sm px-4 bg-white rounded-md outline-black/10 outline  hover:bg-black/5"
-                  >
-                    Submit
-                  </SubmitButton>
-                  <FormSpinner className="flex" />
-                </div>
-              </form> */}
             </div>
           )}
+
+          <hr className="-mx-8 lg:mx-0 my-8" />
+          <h4 className="font-semibold text-xl tracking-tight">Submissions</h4>
+
+          {
+            submissionData.length === 0 ? (
+              <div className="text-black/60 mt-4 text-sm">No submissions yet!</div>
+            ) : null
+          }
 
 
 
