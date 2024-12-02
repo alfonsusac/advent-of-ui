@@ -6,9 +6,6 @@ import { revalidateTag, unstable_cache } from "next/cache";
 import { auth, getUsername, signIn, signOut } from "@/lib/auth";
 import prisma from "@/lib/db";
 import { Footer } from "@/ui/footer";
-import { Input } from "@/ui/input";
-import { SubmitButton } from "@/ui/submitButton";
-import { FormSpinner } from "@/ui/formSpinner";
 import { SubmissionListItem } from "./SubmissionListItem";
 import { SubmissionForm } from "./SubmissionForm";
 
@@ -23,13 +20,31 @@ export default async function DayPage(context: {
   const params = await context.params;
   const day = parseInt(params.day);
   if (typeof day !== "number" || Number.isNaN(day)) {
-    return notFound();
+    return <div className="p-8 flex flex-col items-start">
+      <h1 className="text-3xl font-semibold">Oops</h1>
+      Invalid Day!
+      <a className="block p-2 border rounded-md px-4 mt-8 hover:bg-zinc-50 cursor-pointer" href={"/"}>
+        Go back to Home
+      </a>
+    </div>
   }
   if (day < 0 || day > 24) {
-    return notFound();
+    return <div className="p-8 flex flex-col items-start">
+      <h1 className="text-3xl font-semibold">Oops</h1>
+      Invalid Day!
+      <a className="block p-2 border rounded-md px-4 mt-8 hover:bg-zinc-50 cursor-pointer" href={"/"}>
+        Go back to Home
+      </a>
+    </div>
   }
-  if (Date.now() > Date.UTC(2024, 11, day + 1, 5, 0, 0)) {
-    return notFound();
+  if (Date.now() < Date.UTC(2024, 11, day, 5, 0, 0)) {
+    return <div className="p-8 flex flex-col items-start">
+      <h1 className="text-3xl font-semibold">Oops</h1>
+      This day is not yet out! Please wait!
+      <a className="block p-2 border rounded-md px-4 mt-8 hover:bg-zinc-50 cursor-pointer" href={"/"}>
+        Go back to Home
+      </a>
+    </div>
   }
 
   let mdxSource;
@@ -210,7 +225,9 @@ export default async function DayPage(context: {
                   }
                   if (
                     url.hostname !== "codepen.io" &&
-                    url.hostname !== "play.tailwindcss.com"
+                    url.hostname !== "play.tailwindcss.com" &&
+                    url.hostname !== "www.figma.com" &&
+                    url.hostname !== "codesandbox.io"
                   ) {
                     redirect(`/${ day }?error=invalid-host`);
                   }

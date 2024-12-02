@@ -60,6 +60,22 @@ export function SubmissionForm(props: {
         >
           tailwindplay
         </a>
+        /
+        <a
+          href="https://www.figma.com/"
+          target="_blank"
+          className="underline text-zinc-800 font-normal underline-offset-4"
+        >
+          figma
+        </a>
+        /
+        <a
+          href="https://codesandbox.io/"
+          target="_blank"
+          className="underline text-zinc-800 font-normal underline-offset-4"
+        >
+          codesandbox
+        </a>
         ){" "}
         {error && (
           <span className="text-red-500 font-normal">
