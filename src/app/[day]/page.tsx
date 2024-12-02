@@ -14,7 +14,7 @@ import { SubmissionForm } from "./SubmissionForm";
 
 export default async function DayPage(context: {
   params: Promise<{
-    day: string;
+    day: string; // 0-based
   }>;
   searchParams: Promise<{
     [key: string]: string;
@@ -25,10 +25,10 @@ export default async function DayPage(context: {
   if (typeof day !== "number" || Number.isNaN(day)) {
     return notFound();
   }
-  if (day < 1 || day > 25) {
+  if (day < 0 || day > 24) {
     return notFound();
   }
-  if (Date.now() > Date.UTC(2024, 11, day, 5, 0, 0)) {
+  if (Date.now() > Date.UTC(2024, 11, day + 1, 5, 0, 0)) {
     return notFound();
   }
 
