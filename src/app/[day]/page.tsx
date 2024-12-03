@@ -8,6 +8,7 @@ import prisma from "@/lib/db";
 import { Footer } from "@/ui/footer";
 import { SubmissionListItem } from "./SubmissionListItem";
 import { SubmissionForm } from "./SubmissionForm";
+import { unstable_after } from "next/server";
 
 export default async function DayPage(context: {
   params: Promise<{
@@ -200,7 +201,7 @@ export default async function DayPage(context: {
           ) : (
             <div className="">
               <div className="flex items-center gap-2 text-sm">
-                <div>Logged in as {getUsername(session)}</div>
+                  <div>Logged in as <a className="underline underline-offset-4 decoration-zinc-400" href={`/user/${getUsername(session)}`}>{getUsername(session)}</a></div>
                 <button
                   className="cursor-pointer hover:underline rounded-md text-sm text-black/60 font-medium flex items-center gap-2"
                   onClick={async () => {
@@ -219,31 +220,40 @@ export default async function DayPage(context: {
                   if (!link) return;
                   if (typeof link !== "string") return;
                   if (!session) return;
+                  let url
                   try {
-                    new URL(link);
+                    url = new URL(link);
                   } catch {
                     return redirect(`/${ day }?error=invalid-link`);
                   }
 
+                  const username = getUsername(session);
+
                   await prisma.submission.create({
                     data: {
-                      url: link,
+                      url: url.toString(),
                       day,
                       year: 2024,
                       user: {
                         connectOrCreate: {
-                          where: {
-                            username: getUsername(session),
-                          },
-                          create: {
-                            username: getUsername(session),
-                          },
+                          where: { username },
+                          create: { username },
                         },
                       },
                     },
                   });
+
+                  fetch('https://discord.com/api/webhooks/1313492646534320220/4h6fEbVpOpj02vPaDOeiMymZl1FmbUGfB3AUjCltQgHP_QVt9jUWtM9B-27nKvWnEdzR', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                      content: `(${ process.env.NODE_ENV === "development" ? "Dev" : "Prod" }) New submission for Day ${ day } from \`${ username }\`: <${ link }>`,
+                    }),
+                  })
+
                   revalidateTag(`submission-2024-${ day }`);
-                  // redirect(`/${day}`);
                 }}
               />
             </div>

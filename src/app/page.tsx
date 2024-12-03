@@ -16,7 +16,7 @@ export default async function Home() {
       <div className="p-8 px-0 md:px-8 pt-24 flex flex-row gap-8 justify-between flex-wrap">
         <div className="shrink-0">
           <h1 className="text-6xl font-bold tracking-tighter">Advent of UI</h1>
-          <p className="">A UI challenge for the holiday season</p>
+          <p className="">A UI creative challenge for the holiday season</p>
         </div>
         <div className="flex flex-col">
           <AdventTimer />

@@ -62,7 +62,7 @@ export default async function UserPage(props: {
               [&:nth-child(3n+1)]:text-white
               [&:nth-child(3n+2)]:bg-green-700
               [&:nth-child(3n+2)]:text-white
-              [&:nth-child(3n+3)]:bg-yellow-600
+              [&:nth-child(3n+3)]:bg-yellow-500
               cursor-pointer
               focus:w-full
               focus:cursor-default
