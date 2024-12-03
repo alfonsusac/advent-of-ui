@@ -29,7 +29,7 @@ export function SubmissionListItem(props: {
         onLike={onLike}
         onUnlike={onUnlike}
       />
-      <div className="font-semibold text tracking-tight">{post.username}</div>
+      <a className="font-semibold text tracking-tight underline underline-offset-4 decoration-black/30 hover:decoration-black/50" href={`/user/${ post.username }`}>{post.username}</a>
       <div className="min-w-0 truncate overflow-hidden text-blue-600 hover:underline">
         {/* Codepen link */}
         <a href={post.url} className="" target="_blank">
@@ -43,13 +43,6 @@ export function SubmissionListItem(props: {
             <DeleteButton
               onDelete={props.onDelete}
             />
-            {/* <button
-              type="button"
-              onClick={props.onDelete}
-              className="w-8 h-8 rounded-md hover:bg-red-50 flex items-center justify-center"
-            >
-              <MaterialSymbolsDeleteOutline className="shrink-0 w-4 h-4 text-red-500" />
-            </button> */}
           </>
         ) : (
           <></>

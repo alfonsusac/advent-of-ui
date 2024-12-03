@@ -44,39 +44,7 @@ export function SubmissionForm(props: {
         className="block text-sm font-semibold mt-2"
         htmlFor="submisison_link"
       >
-        Link (
-        <a
-          href="https://codepen.io/pen"
-          target="_blank"
-          className="underline text-zinc-800 font-normal underline-offset-4"
-        >
-          codepen
-        </a>
-        /
-        <a
-          href="https://play.tailwindcss.com/"
-          target="_blank"
-          className="underline text-zinc-800 font-normal underline-offset-4"
-        >
-          tailwindplay
-        </a>
-        /
-        <a
-          href="https://www.figma.com/"
-          target="_blank"
-          className="underline text-zinc-800 font-normal underline-offset-4"
-        >
-          figma
-        </a>
-        /
-        <a
-          href="https://codesandbox.io/"
-          target="_blank"
-          className="underline text-zinc-800 font-normal underline-offset-4"
-        >
-          codesandbox
-        </a>
-        ){" "}
+        Link
         {error && (
           <span className="text-red-500 font-normal">
             {error === "invalid-host" && "Invalid host"}

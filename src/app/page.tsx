@@ -33,19 +33,22 @@ export default async function Home() {
           // const hidden = false
           return (
             <a
-              href={`/${day + 1}`}
+              href={`/${ day + 1 }`}
               key={day}
               className={`flex gap-1 flex-col items-center justify-center 
                 border-4 group
-                ${
-                  hidden
-                    ? `
+                ${ hidden
+                  ? `
                       hover:bg-black hover:text-white transition-all opacity-20 pointer-events-none
                       `
-                    : `[&:nth-child(2n)]:border-green-700 
-                [&:nth-child(2n)]:hover:bg-green-700 
-                [&:nth-child(2n+1)]:border-red-700 
-                [&:nth-child(2n+1)]:hover:bg-red-700`
+                  : `
+                [&:nth-child(2n+1)]:border-green-700 
+                [&:nth-child(3n+1)]:hover:bg-green-700 
+                [&:nth-child(3n+2)]:border-red-700 
+                [&:nth-child(3n+2)]:hover:bg-red-700
+                [&:nth-child(3n+3)]:border-yellow-500 
+                [&:nth-child(3n+3)]:hover:bg-yellow-500
+                `
                 }
                 
                 p-2 w-40 h-40
