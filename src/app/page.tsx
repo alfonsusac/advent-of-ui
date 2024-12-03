@@ -4,11 +4,26 @@ import { Footer } from "@/ui/footer";
 import { AdventTimer } from "@/ui/adventTiner";
 import { DaysTimer } from "@/ui/daysTimer";
 import { auth } from "@/lib/auth";
+import prisma from "@/lib/db";
+import { unstable_cache } from "next/cache";
 
 export default async function Home() {
 
   await auth();
 
+  const groups = await unstable_cache(async () => prisma.submission.groupBy({
+    by: ['year', 'day'],
+    _count: true,
+    where: {
+      deleted: false
+    }
+  }),
+    [],
+    {
+      tags: ['2024-submissions'],
+      revalidate: 60,
+    }
+  )()
 
   return (
     <div className="mx-8">
@@ -65,11 +80,13 @@ export default async function Home() {
               </div>
               <div className={`font-bold text-5xl`}>{day + 1}</div>
               <DaysTimer days={day + 1} />
+              <div className="absolute bottom-0 left-1 text-sm">{
+                groups.find(group => group.year === 2024 && group.day === day + 1)?._count || 0
+              }</div>
             </a>
           );
         })}
       </div>
-
       <Footer />
     </div>
   );

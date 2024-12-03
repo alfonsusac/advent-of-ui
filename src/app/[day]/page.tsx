@@ -254,6 +254,7 @@ export default async function DayPage(context: {
                   })
 
                   revalidateTag(`submission-2024-${ day }`);
+                  revalidateTag(`2024-submissions`);
                 }}
               />
             </div>
