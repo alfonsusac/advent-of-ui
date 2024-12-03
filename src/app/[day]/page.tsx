@@ -219,19 +219,10 @@ export default async function DayPage(context: {
                   if (!link) return;
                   if (typeof link !== "string") return;
                   if (!session) return;
-                  let url: URL;
                   try {
-                    url = new URL(link);
+                    new URL(link);
                   } catch {
                     return redirect(`/${ day }?error=invalid-link`);
-                  }
-                  if (
-                    url.hostname !== "codepen.io" &&
-                    url.hostname !== "play.tailwindcss.com" &&
-                    url.hostname !== "www.figma.com" &&
-                    url.hostname !== "codesandbox.io"
-                  ) {
-                    redirect(`/${ day }?error=invalid-host`);
                   }
 
                   await prisma.submission.create({
@@ -266,8 +257,6 @@ export default async function DayPage(context: {
               <div className="text-black/60 mt-4 text-sm">No submissions yet!</div>
             ) : null
           }
-
-
 
           {submissionData.map(post => {
             const liked = currentUserLikes.some(sub => sub.id === post.id);
