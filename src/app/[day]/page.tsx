@@ -52,9 +52,24 @@ export default async function DayPage(context: {
   try {
     mdxSource = await unstable_cache(
       async () => {
+        const token = process.env.CONTENT_TOKEN;
+        if (!token)
+          return notFound();
         const res = await fetch(
-          `https://raw.githubusercontent.com/alfonsusac/advent-of-ui/refs/heads/main/src/content/2024/day${ day }.mdx`
-        );
+          new URL(`/2024-${ day }`, "https://advent-of-ui-content.vercel.app"),
+          {
+            headers: {
+              "x-token": token,
+            }
+          }
+        )
+        const data = await res.json();
+        if ('error' in data) {
+          return notFound();
+        }
+        if ('content' in data) {
+          return data.content;
+        }
         if (!res.ok) {
           return notFound();
         }
@@ -201,7 +216,7 @@ export default async function DayPage(context: {
           ) : (
             <div className="">
               <div className="flex items-center gap-2 text-sm">
-                  <div>Logged in as <a className="underline underline-offset-4 decoration-zinc-400" href={`/user/${getUsername(session)}`}>{getUsername(session)}</a></div>
+                <div>Logged in as <a className="underline underline-offset-4 decoration-zinc-400" href={`/user/${ getUsername(session) }`}>{getUsername(session)}</a></div>
                 <button
                   className="cursor-pointer hover:underline rounded-md text-sm text-black/60 font-medium flex items-center gap-2"
                   onClick={async () => {
