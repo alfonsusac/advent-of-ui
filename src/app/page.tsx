@@ -57,7 +57,7 @@ export default async function Home() {
                       hover:bg-black hover:text-white transition-all opacity-20 pointer-events-none
                       `
                   : `
-                [&:nth-child(2n+1)]:border-green-700 
+                [&:nth-child(3n+1)]:border-green-700 
                 [&:nth-child(3n+1)]:hover:bg-green-700 
                 [&:nth-child(3n+2)]:border-red-700 
                 [&:nth-child(3n+2)]:hover:bg-red-700
