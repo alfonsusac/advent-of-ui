@@ -6,6 +6,7 @@ import { DaysTimer } from "@/ui/daysTimer";
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/db";
 import { unstable_cache } from "next/cache";
+import { event2024 } from "@/lib/event";
 
 export default async function Home() {
 
@@ -39,20 +40,16 @@ export default async function Home() {
       </div>
 
       <div className="flex flex-wrap gap-2 relative">
-        {[...Array(24).keys()].map(day => {
-          const date = new Date(
-            Date.UTC(new Date().getFullYear(), 11, day + 1, 5, 0)
-          ); // December = month 11 (zero-indexed)
-          const hidden = new Date(Date.now()) < date;
-          // const nextDay = new Date(Date.now()).getDate() === day + 1;
-          // const hidden = false
+        {event2024.days.map((timestamp, i) => {
+          const day = i + 1;
+          const isUnlocked = event2024.isUnlocked(day);
           return (
             <a
               href={`/${ day + 1 }`}
               key={day}
               className={`flex gap-1 flex-col items-center justify-center 
                 border-4 group
-                ${ hidden
+                ${ !isUnlocked
                   ? `
                       hover:bg-black hover:text-white transition-all opacity-20 pointer-events-none
                       `
@@ -78,10 +75,10 @@ export default async function Home() {
               >
                 Day
               </div>
-              <div className={`font-bold text-5xl`}>{day + 1}</div>
-              <DaysTimer days={day + 1} />
+              <div className={`font-bold text-5xl`}>{day}</div>
+              <DaysTimer days={day} />
               <div className="absolute bottom-0 left-1 text-sm">{
-                groups.find(group => group.year === 2024 && group.day === day + 1)?._count || 0
+                groups.find(group => group.year === 2024 && group.day === day)?._count || 0
               }</div>
             </a>
           );

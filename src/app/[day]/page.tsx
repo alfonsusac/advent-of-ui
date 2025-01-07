@@ -8,7 +8,7 @@ import prisma from "@/lib/db";
 import { Footer } from "@/ui/footer";
 import { SubmissionListItem } from "./SubmissionListItem";
 import { SubmissionForm } from "./SubmissionForm";
-import { unstable_after } from "next/server";
+import { event2024 } from "@/lib/event";
 
 export default async function DayPage(context: {
   params: Promise<{
@@ -20,6 +20,7 @@ export default async function DayPage(context: {
 }) {
   const params = await context.params;
   const day = parseInt(params.day);
+
   if (typeof day !== "number" || Number.isNaN(day)) {
     return <div className="p-8 flex flex-col items-start">
       <h1 className="text-3xl font-semibold">Oops</h1>
@@ -29,6 +30,7 @@ export default async function DayPage(context: {
       </a>
     </div>
   }
+
   if (day < 0 || day > 24) {
     return <div className="p-8 flex flex-col items-start">
       <h1 className="text-3xl font-semibold">Oops</h1>
@@ -38,7 +40,8 @@ export default async function DayPage(context: {
       </a>
     </div>
   }
-  if (Date.now() < Date.UTC(2024, 11, day, 5, 0, 0)) {
+  const isUnlocked = event2024.isUnlocked(day);
+  if (!isUnlocked) {
     return <div className="p-8 flex flex-col items-start">
       <h1 className="text-3xl font-semibold">Oops</h1>
       This day is not yet out! Please wait!
@@ -65,6 +68,7 @@ export default async function DayPage(context: {
         )
         const data = await res.json();
         if ('error' in data) {
+          console.log(data.error);
           return notFound();
         }
         if ('content' in data) {

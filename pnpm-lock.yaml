@@ -14,6 +14,9 @@ importers:
       '@prisma/client':
         specifier: 6.0.0
         version: 6.0.0(prisma@6.0.0)
+      advent-event:
+        specifier: ^0.2.0
+        version: 0.2.0
       lazy-cn:
         specifier: ^1.0.0
         version: 1.0.0
@@ -528,6 +531,9 @@ packages:
     resolution: {integrity: sha512-cl669nCJTZBsL97OF4kUQm5g5hC2uihk0NxY3WENAC0TYdILVkAyHymAntgxGkl7K+t0cXIrH5siy5S4XkFycA==}
     engines: {node: '>=0.4.0'}
     hasBin: true
+
+  advent-event@0.2.0:
+    resolution: {integrity: sha512-L1kkQSYBSR2giL2yv8MdtO6UVuZKetsgwLyOlX0aGcRdXFD4P98hB4VptDvaGn5knRCvT9eofJQN7715oBgoBw==}
 
   ajv@6.12.6:
     resolution: {integrity: sha512-j3fVLgvTo527anyYyJOGTYJbG+vnnQYvE0m5mmkc1TK+nxAppkCLMIL0aZ4dblVCNoGShhm+kzE4ZUykBoMg4g==}
@@ -2704,6 +2710,8 @@ snapshots:
       acorn: 8.14.0
 
   acorn@8.14.0: {}
+
+  advent-event@0.2.0: {}
 
   ajv@6.12.6:
     dependencies:
